@@ -27,9 +27,6 @@ pub enum AccessType {
 	/// No access. Useful primarily for initialization
 	Nothing,
 
-	/// Command buffer read operation as defined by `NVX_device_generated_commands`
-	CommandBufferReadNVX,
-
 	/// Read as an indirect buffer for drawing or dispatch
 	IndirectBuffer,
 
@@ -125,9 +122,6 @@ pub enum AccessType {
 
 	/// Read by the presentation engine (i.e. `vkQueuePresentKHR`)
 	Present,
-
-	/// Command buffer write operation as defined by `NVX_device_generated_commands`
-	CommandBufferWriteNVX,
 
 	/// Written as any resource in a vertex shader
 	VertexShaderWrite,
@@ -500,11 +494,6 @@ pub(crate) fn get_access_info(access_type: AccessType) -> AccessInfo {
 			access_mask: ash::vk::AccessFlags::empty(),
 			image_layout: ash::vk::ImageLayout::UNDEFINED,
 		},
-		AccessType::CommandBufferReadNVX => AccessInfo {
-			stage_mask: ash::vk::PipelineStageFlags::COMMAND_PROCESS_NVX,
-			access_mask: ash::vk::AccessFlags::COMMAND_PROCESS_READ_NVX,
-			image_layout: ash::vk::ImageLayout::UNDEFINED,
-		},
 		AccessType::IndirectBuffer => AccessInfo {
 			stage_mask: ash::vk::PipelineStageFlags::DRAW_INDIRECT,
 			access_mask: ash::vk::AccessFlags::INDIRECT_COMMAND_READ,
@@ -669,11 +658,6 @@ pub(crate) fn get_access_info(access_type: AccessType) -> AccessInfo {
 			access_mask: ash::vk::AccessFlags::empty(),
 			image_layout: ash::vk::ImageLayout::PRESENT_SRC_KHR,
 		},
-		AccessType::CommandBufferWriteNVX => AccessInfo {
-			stage_mask: ash::vk::PipelineStageFlags::COMMAND_PROCESS_NVX,
-			access_mask: ash::vk::AccessFlags::COMMAND_PROCESS_WRITE_NVX,
-			image_layout: ash::vk::ImageLayout::UNDEFINED,
-		},
 		AccessType::VertexShaderWrite => AccessInfo {
 			stage_mask: ash::vk::PipelineStageFlags::VERTEX_SHADER,
 			access_mask: ash::vk::AccessFlags::SHADER_WRITE,
@@ -760,7 +744,6 @@ pub(crate) fn get_access_info(access_type: AccessType) -> AccessInfo {
 
 pub(crate) fn is_write_access(access_type: AccessType) -> bool {
 	match access_type {
-		AccessType::CommandBufferWriteNVX => true,
 		AccessType::VertexShaderWrite => true,
 		AccessType::TessellationControlShaderWrite => true,
 		AccessType::TessellationEvaluationShaderWrite => true,
